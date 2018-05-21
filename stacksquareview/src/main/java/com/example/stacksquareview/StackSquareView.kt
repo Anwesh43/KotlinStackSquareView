@@ -86,7 +86,7 @@ class StackSquareView (ctx : Context) : View(ctx) {
 
         private var next : SSNode? = null
 
-        private var prev : SSNode? = null
+        var prev : SSNode? = null
 
         private val state : State = State()
 
@@ -124,9 +124,9 @@ class StackSquareView (ctx : Context) : View(ctx) {
             state.startUpdating(startcb)
         }
 
-        fun getNext(dir : Float, cb : () -> Unit) : SSNode? {
+        fun getNext(dir : Int, cb : () -> Unit) : SSNode {
             var curr : SSNode? = this.prev
-            if (dir == 1f) {
+            if (dir == 1) {
                 curr = this.next
             }
             if (curr != null) {
@@ -134,6 +134,31 @@ class StackSquareView (ctx : Context) : View(ctx) {
             }
             cb()
             return this
+        }
+    }
+
+    data class StackSquare (var i : Int) {
+
+        var curr : SSNode = SSNode(0)
+
+        var dir : Int = 1
+
+        fun update(stopcb : (Float) -> Unit) {
+            curr.update {
+                curr = this.curr.getNext(dir) {
+                    dir *= -1
+                }
+                stopcb(it)
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            curr?.prev?.draw(canvas, paint)
+            curr.draw(canvas, paint)
+        }
+
+        fun startUpdating(startcb : () -> Unit) {
+            curr.startUpdating(startcb)
         }
     }
 }
