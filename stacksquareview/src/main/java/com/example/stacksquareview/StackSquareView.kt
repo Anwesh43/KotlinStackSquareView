@@ -37,9 +37,9 @@ class StackSquareView (ctx : Context) : View(ctx) {
         fun update(stopcb : (Float) -> Unit) {
             scales[j] += 0.1f * dir
             if (Math.abs(scales[j] - prevScale) > 1) {
-                prevScale = scales[j] + dir
+                scales[j] = prevScale + dir
                 j += dir.toInt()
-                if (j == SQUARES && j == -1) {
+                if (j == scales.size || j == -1) {
                     j -= dir.toInt()
                     dir = 0f
                     prevScale = scales[j]
@@ -89,7 +89,7 @@ class StackSquareView (ctx : Context) : View(ctx) {
 
         private var next : SSNode? = null
 
-        var prev : SSNode? = null
+        private var prev : SSNode? = null
 
         private val state : State = State()
 
@@ -107,8 +107,8 @@ class StackSquareView (ctx : Context) : View(ctx) {
         fun draw(canvas : Canvas, paint : Paint) {
             val w : Float = canvas.width.toFloat()
             val h : Float = canvas.height.toFloat()
-            val gap : Float = (w / (SQUARES * 3))
-            paint.color = Color.WHITE
+            val gap : Float = (w / (SQUARES * 2))
+            paint.color = Color.parseColor("#e74c3c")
             val dx : Float = i * gap
             val sx : Float = w - gap
             val x : Float = sx + (dx - sx) * state.scales[1]
@@ -117,6 +117,7 @@ class StackSquareView (ctx : Context) : View(ctx) {
             canvas.translate(x + gap/2, h/2)
             canvas.drawRect(RectF(-gap/2, -h2, gap/2, h2), paint)
             canvas.restore()
+            prev?.draw(canvas, paint)
         }
 
         fun update(stopcb : (Float) -> Unit) {
@@ -156,7 +157,6 @@ class StackSquareView (ctx : Context) : View(ctx) {
         }
 
         fun draw(canvas : Canvas, paint : Paint) {
-            curr?.prev?.draw(canvas, paint)
             curr.draw(canvas, paint)
         }
 
