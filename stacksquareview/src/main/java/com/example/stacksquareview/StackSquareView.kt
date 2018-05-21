@@ -3,12 +3,13 @@ package com.example.stacksquareview
 /**
  * Created by anweshmishra on 21/05/18.
  */
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.MotionEvent
 import android.graphics.*
 
-val SQUARES = 4
+val SQUARES : Int = 4
 
 class StackSquareView (ctx : Context) : View(ctx) {
 
@@ -184,6 +185,14 @@ class StackSquareView (ctx : Context) : View(ctx) {
             stackSquare.startUpdating {
                 animator.start()
             }
+        }
+    }
+    companion object {
+
+        fun create(activity : Activity) : StackSquareView {
+            val view : StackSquareView = StackSquareView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
