@@ -161,4 +161,27 @@ class StackSquareView (ctx : Context) : View(ctx) {
             curr.startUpdating(startcb)
         }
     }
+
+    data class Renderer (var view : StackSquareView) {
+
+        private val animator : Animator = Animator(view)
+
+        private val stackSquare : StackSquare = StackSquare(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            stackSquare.draw(canvas, paint)
+            animator.animate {
+                stackSquare.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            stackSquare.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
